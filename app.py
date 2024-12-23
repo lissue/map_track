@@ -28,13 +28,23 @@ def generate_hex_colors(values):
 
 if "data" not in st.session_state:
     st.session_state.data = pd.DataFrame()
-col1, col2, col3 = st.columns(3)
+col1, col2, col3, col4, col5, col6, col7 = st.columns(7)
 with col1:
-    lat = st.number_input("Latitude")
+    lat_degrees = st.number_input("Lat Degrees", value=38, step=1)
 with col2:
-    lon = st.number_input("Longitude")
+    lat_minutes = st.number_input("Lat Minutes", value=24, step=1)
 with col3:
+    lat_seconds = st.number_input("Lat Seconds", value=39.7, step=0.1)
+with col4:
+    lon_degrees = st.number_input("Lon Degrees", value=80, step=1)
+with col5:
+    lon_minutes = st.number_input("Lon Minutes", value=00, step=1)
+with col6:
+    lon_seconds = st.number_input("Lon Seconds", value=16.8, step=0.1)
+with col7:
     if st.button("Update"):
+        lat = lat_degrees + lat_minutes / 60 + lat_seconds / 3600
+        lon = -(lon_degrees + lon_minutes / 60 + lat_seconds / 3600)
         elapsed_t = np.nan
         t = datetime.now()
         if not st.session_state.data.empty:
@@ -64,7 +74,7 @@ with col3:
         )
 
 
-st.map(st.session_state.data, color="color")
+st.map(st.session_state.data, color="color", size=1)
 st.dataframe(st.session_state.data, hide_index=True, use_container_width=True)
 
 if __name__ == "__main__":
